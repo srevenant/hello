@@ -9,7 +9,7 @@ import cherrypy
 class Hello(object):
     @cherrypy.expose
     def hi(self):
-        return "Hiho" + json.dumps(os.environ, indent=2)
+        return "Hiho" + json.dumps(dict(os.environ), indent=2)
 
     @cherrypy.expose
     def bye(self):
