@@ -19,7 +19,8 @@ class Hello(object):
 if __name__ == '__main__':
     conf = {
         'global':{
-            'server.socket_port': os.environ.get('PORT') or 8080
+            'server.socket_port': os.environ.get('PORT') or 8080,
+            'server.socket_host': '0.0.0.0'
         },
     }
 
