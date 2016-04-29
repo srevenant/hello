@@ -3,45 +3,18 @@
 # run this outside of any other ephemer context
 # helps to build the environ, before the environ is built
 
-python=/app/python-2.7.11-linux-x64/bin/python
-install=none
+python=$(which python)
+install=local
 
-for x in "$@"; do
-	case $x in
-		--hosted)
-			pypath=/app/local/bin/virtual-python
-			install=hosted
-			;;
-		--local)
-			pypath=$(pwd)/bin/virtual-python
-			install=local
-			;;
-		*)
-			altpython=$x
-			;;
-	esac
-done
-
-if [ "$install" = "none" ]; then
-	echo "Syntax: $0 --local|--hosted [python-binary]"
-	exit 1
-elif [ "$install" = local ]; then
-	python=$altpython
-fi
+echo python=$python
 
 if [ ! -x "$python" ]; then
-	echo "Cannot execute $python"
+	echo "Cannot execute python=$python"
 	exit 1
 elif [ "$($python --version 2>&1|grep -i python)" ]; then
 	vers=$($python --version 2>&1|sed -e 's/ /-/'|tr '[A-Z]' '[a-z]')
 else
 	echo "$python is not python (?)"
-	exit 1
-fi
-
-pybin=$(dirname $python)
-if [ ! -x $pybin/pip -o ! -x $pybin/virtualenv ]; then
-	echo "Python installation is missing pip or virtualenv, cannot continue"
 	exit 1
 fi
 
@@ -53,7 +26,7 @@ find . -type f -name "*.pyc" -exec rm {} \;
 rm -rf python
 
 # virtual environ
-$pybin/virtualenv -p $python python
+virtualenv -p $python python
 
 export VIRTUAL_ENV=./python
 export PATH=${VIRTUAL_ENV}/bin:${PATH}
